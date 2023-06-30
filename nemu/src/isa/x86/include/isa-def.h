@@ -13,22 +13,38 @@
  * See the Mulan PSL v2 for more details.
  ***************************************************************************************/
 
-#ifndef __ISA_LOONGARCH32R_H__
-#define __ISA_LOONGARCH32R_H__
+#ifndef __ISA_X86_H__
+#define __ISA_X86_H__
 
 #include <common.h>
 
 typedef struct {
-  word_t gpr[32];
-  vaddr_t pc;
-} loongarch32r_CPU_state;
+  union {
+    struct {
+      uint32_t eax;
+      uint32_t ecx;
+      uint32_t edx;
+      uint32_t ebx;
+      uint32_t esp;
+      uint32_t ebp;
+      uint32_t esi;
+      uint32_t edi;
+    };
+    union {
+      uint32_t _32;
+      uint16_t _16;
+      uint8_t _8[2];
+    } gpr[8];
+  };
+  word_t pc;
+} x86_CPU_state;
 
 // decode
 typedef struct {
   union {
     uint32_t val;
   } inst;
-} loongarch32r_ISADecodeInfo;
+} x86_ISADecodeInfo;
 
 #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
