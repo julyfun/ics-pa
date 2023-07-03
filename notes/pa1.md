@@ -37,4 +37,8 @@ https://www.cnblogs.com/guozqzzu/p/3626893.html
 
 riscv64.
 
+## Ubuntu 系统好像崩溃之后
+
+花了大半天重装了并配好了应该有的东西。除了 docker
+现在用了默认的 riscv32 架构捏。
 
