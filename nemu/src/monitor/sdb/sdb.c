@@ -54,6 +54,7 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+// 该 struct 没有类型名称
 static struct {
   const char *name;
   const char *description;
@@ -77,6 +78,7 @@ static int cmd_help(char *args) {
   if (arg == NULL) {
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {
+      // @julyfun cmd_table 还有 description
       printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
@@ -96,12 +98,17 @@ void sdb_set_batch_mode() {
   is_batch_mode = true;
 }
 
+// 内容是什么
+// 被设计为给谁调用，充当什么作用
+// sdb 是 simple debugger 的意思
 void sdb_mainloop() {
   if (is_batch_mode) {
     cmd_c(NULL);
     return;
   }
 
+  // @julyfun 这个 rl_gets 函数就是读入一行
+  //  这个 for 循环就是主循环啦
   for (char *str; (str = rl_gets()) != NULL; ) {
     char *str_end = str + strlen(str);
 
@@ -119,19 +126,22 @@ void sdb_mainloop() {
 
 #ifdef CONFIG_DEVICE
     extern void sdl_clear_event_queue();
-    sdl_clear_event_queue();
+      sdl_clear_event_queue();
 #endif
 
     int i;
+    // @julyfun 直接与每个子命令进行比较
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
+        // 每个 cmd_table 的条目是 name + function
+        // cmd_q 做的事情就是 return -1
         if (cmd_table[i].handler(args) < 0) { return; }
         break;
       }
     }
 
     if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
-  }
+  } // for ...
 }
 
 void init_sdb() {

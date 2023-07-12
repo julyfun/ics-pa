@@ -25,6 +25,7 @@
  */
 #define MAX_INST_TO_PRINT 10
 
+// @julyfun this type is a macro
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
@@ -74,6 +75,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) {
+    // @julyfun let's see what's going on inside
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
@@ -97,7 +99,10 @@ void assert_fail_msg() {
 }
 
 /* Simulate how the CPU works. */
+// @julyfun 我去居然用程序对硬件进行模拟
 void cpu_exec(uint64_t n) {
+  // @julyfun 按键 c 进入
+  // 下面这是一个全局变量
   g_print_step = (n < MAX_INST_TO_PRINT);
   switch (nemu_state.state) {
     case NEMU_END: case NEMU_ABORT:
@@ -108,12 +113,16 @@ void cpu_exec(uint64_t n) {
 
   uint64_t timer_start = get_time();
 
+  // 会执行 n 次 execute_once 
   execute(n);
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
 
+  // @julyfun 这也是一个全局变量 
+  // 下面程序是结束执行了
   switch (nemu_state.state) {
+    // @julyfun 这不会是模拟中断吧..
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:

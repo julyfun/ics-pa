@@ -18,6 +18,7 @@
 #include <device/mmio.h>
 #include <isa.h>
 
+// @julyfun 这个文件中的大数组模拟了内存
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
